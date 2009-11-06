@@ -1,6 +1,7 @@
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ar" lang="ar">
  <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <!-- <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" /> -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
 
   <body>
@@ -10,9 +11,9 @@
       {% else %}
        An anonymous person wrote:
       {% endif %} -->
-      <blockquote>{{ word.arabtext|escape }}</blockquote>
+      <blockquote dir=rtl>{{ word.arabtext|escape }}</blockquote>
       <blockquote>{{ word.meaning|escape }}</blockquote>
-      <blockquote>{{ word.usageexample|escape }}</blockquote>
+      <blockquote dir=rtl>{{ word.usageexample|escape }}</blockquote>
       <hr>
     {% endfor %}
 
