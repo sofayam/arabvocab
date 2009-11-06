@@ -1,1 +1,1 @@
-./google_appengine/appcfg.py update arabvocab/
+../google_appengine/appcfg.py update .

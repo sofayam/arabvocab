@@ -1,1 +1,1 @@
-./google_appengine/dev_appserver.py arabvocab/
+../google_appengine/dev_appserver.py .
