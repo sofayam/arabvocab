@@ -7,9 +7,13 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
+import arabise
+
 class Word(db.Model):
     arabtext = db.StringProperty()
+    romantext = db.StringProperty()
     meaning = db.StringProperty()
+    root = db.StringProperty()
     author = db.UserProperty()
     date = db.DateTimeProperty(auto_now_add=True)
     usageexample = db.StringProperty(multiline=True)
@@ -50,7 +54,11 @@ class Definer(webapp.RequestHandler):
 
         newword.meaning = self.request.get('meaning')
         newword.arabtext = self.request.get('arabtext')
+        newword.romantext = self.request.get('romantext')
+        newword.root = self.request.get('root')
         newword.usageexample = self.request.get('usageexample')
+        if newword.romantext and (newword.arabtext == ""):
+            newword.arabtext = arabise.arabise(newword.romantext)
         newword.put()
         self.redirect('/')
 

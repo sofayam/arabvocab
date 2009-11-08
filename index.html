@@ -12,6 +12,7 @@
        An anonymous person wrote:
       {% endif %} -->
       <blockquote dir=rtl>{{ word.arabtext|escape }}</blockquote>
+      <blockquote>{{ word.root|escape }}</blockquote>
       <blockquote>{{ word.meaning|escape }}</blockquote>
       <blockquote dir=rtl>{{ word.usageexample|escape }}</blockquote>
       <hr>
@@ -19,6 +20,8 @@
 
     <form action="/sign" method="post">
       <div>Arabic:<input type=text name="arabtext"></div>
+      <div>(roman):<input type=text name="romantext"></div>
+      <div>Root:<input type=text name="root"></div>
       <div>English:<input type=text name="meaning"></div>
       <div>Usage Example:</div>
       <div><textarea name="usageexample" rows="3" cols="60"></textarea></div>
