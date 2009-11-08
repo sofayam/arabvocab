@@ -68,7 +68,8 @@ def eatchar(instr):
     rest = instr[off:]
     return (unichr(int(codes[ch],16)), rest)
     
-        
+def ar(ch):
+    return unichr(int(ch,16))
 
 def dumpall():
     for key,val in codes.items():

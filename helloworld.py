@@ -51,7 +51,6 @@ class Definer(webapp.RequestHandler):
 
         if users.get_current_user():
             newword.author = users.get_current_user()
-
         newword.meaning = self.request.get('meaning')
         newword.arabtext = self.request.get('arabtext')
         newword.romantext = self.request.get('romantext')
@@ -62,9 +61,29 @@ class Definer(webapp.RequestHandler):
         newword.put()
         self.redirect('/')
 
+class RomTab(webapp.RequestHandler):
+    def get(self):
+        ctr = 0
+        buff = []
+        w = buff.append
+        w("<table>")
+        for key,val in arabise.codes.items():
+            ctr += 1
+            w("<tr>")
+            w("<td>%s</td><td>%s</td>" % (key, arabise.ar(val)))
+            w("</tr>")
+        w("</table>")
+        template_values = {
+            'tabledata': u"".join(buff),
+            }
+
+        path = os.path.join(os.path.dirname(__file__), 'romtab.html')
+        self.response.out.write(template.render(path, template_values))
+
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
-                                      ('/sign', Definer)],
+                                      ('/sign', Definer),
+                                      ('/romtab', RomTab)],
                                      debug=True)
 
 def main():
