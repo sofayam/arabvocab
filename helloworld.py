@@ -45,6 +45,27 @@ class MainPage(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, template_values))
 
+class Lister(webapp.RequestHandler):
+    def get(self):
+        words_query = Word.all().order('-date')
+        words = words_query.fetch(10)
+
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+            'words': words,
+            'url': url,
+            'url_linktext': url_linktext,
+            }
+
+        path = os.path.join(os.path.dirname(__file__), 'list.html')
+        self.response.out.write(template.render(path, template_values))
+
 class Definer(webapp.RequestHandler):
     def post(self):
         newword = Word()
@@ -61,17 +82,64 @@ class Definer(webapp.RequestHandler):
         newword.put()
         self.redirect('/')
 
+
+class Editor(webapp.RequestHandler):
+    def get(self):
+        k = self.request.get('key')
+        word = Word.get(k)
+#        self.response.out.write(word.meaning)
+#        self.response.out.write("thats it %s \n" % k)        
+        path = os.path.join(os.path.dirname(__file__), 'edit.html')
+        template_values = {
+            'word': word
+            }
+        self.response.out.write(template.render(path, template_values))
+
+class Deleter(webapp.RequestHandler):
+    def get(self):
+        k = self.request.get('key')
+        word = Word.get(k)
+#        self.response.out.write(word.meaning)
+#        self.response.out.write("thats it %s \n" % k)        
+        path = os.path.join(os.path.dirname(__file__), 'edit.html')
+        template_values = {
+            'word': word
+            }
+        self.response.out.write(template.render(path, template_values))
+        self.redirect('/')
+
+
+class Saver(webapp.RequestHandler):
+    def post(self):
+
+        word = Word.get(self.request.get('key'))
+
+
+        word.meaning = self.request.get('meaning')
+        word.arabtext = self.request.get('arabtext')
+        word.romantext = self.request.get('romantext')
+        word.root = self.request.get('root')
+        word.usageexample = self.request.get('usageexample')
+        if word.romantext and (word.arabtext == ""):
+            word.arabtext = arabise.arabise(word.romantext)
+        word.put()
+        self.redirect('/')
+
+
 class RomTab(webapp.RequestHandler):
     def get(self):
+        tabwidth = 5
         ctr = 0
         buff = []
         w = buff.append
-        w("<table>")
-        for key,val in arabise.codes.items():
+        w('<table border="0">')
+        for key,val in arabise.codelist:
+            if (ctr % tabwidth) == 0:
+                w("<tr>")
+            w("<td>%s</td><td>:</td><td>%s</td><td>  </td>" % (key, arabise.ar(val)))
+            if (ctr % tabwidth) == (tabwidth - 1):
+                w("</tr>")
             ctr += 1
-            w("<tr>")
-            w("<td>%s</td><td>%s</td>" % (key, arabise.ar(val)))
-            w("</tr>")
         w("</table>")
         template_values = {
             'tabledata': u"".join(buff),
@@ -82,7 +150,12 @@ class RomTab(webapp.RequestHandler):
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
+                                      ('/list', Lister),
                                       ('/sign', Definer),
+                                      ('/edit', Editor),
+                                      ('/delete', Deleter),
+                                      ('/alter', Saver),
+                                      #('/test', Tester),
                                       ('/romtab', RomTab)],
                                      debug=True)
 
