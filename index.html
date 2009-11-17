@@ -16,6 +16,7 @@
       <blockquote>{{ word.meaning|escape }}</blockquote>
       <blockquote dir=rtl>{{ word.usageexample|escape }}</blockquote>
       <a href="/edit?key={{ word.key }}">edit</a>
+      <a href="/delete?key={{ word.key }}">delete</a>
     {% endfor %}
 
     <form action="/sign" method="post">

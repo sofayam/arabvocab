@@ -46,7 +46,7 @@ codelist = [
 ('w'  , "648"),
 ('i'  , "650"),
 ('y'  , "64A"),
-('T'  , "629"),
+("'t" , "629"),# Taa Mabuta
 ('"' , "651"), # shadda
 ]
 
@@ -55,6 +55,8 @@ codes = {}
 def setupcodes():
     global codes
     for key,val in codelist:
+        if key in codes:
+            raise "dupe code %s" % key
         codes[key] = val
 
 setupcodes()
@@ -88,7 +90,6 @@ def ar(ch):
 def dumpall():
     for key,val in codes.items():
         print key, " ", unichr(int(val,16))
-
 
 
 def test():

@@ -99,13 +99,7 @@ class Deleter(webapp.RequestHandler):
     def get(self):
         k = self.request.get('key')
         word = Word.get(k)
-#        self.response.out.write(word.meaning)
-#        self.response.out.write("thats it %s \n" % k)        
-        path = os.path.join(os.path.dirname(__file__), 'edit.html')
-        template_values = {
-            'word': word
-            }
-        self.response.out.write(template.render(path, template_values))
+        word.delete()
         self.redirect('/')
 
 
